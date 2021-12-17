@@ -2,6 +2,20 @@
   <router-view />
 </template>
 
+<script>
+import {mapActions } from 'vuex'
+
+export default {
+  methods: {
+    ...mapActions('user', ['setToken'])
+  },
+  created() {
+    // достаем токен из хранилища и передаем в vuex
+   const token = localStorage.getItem('token')
+   this.setToken(token)
+  }
+}
+</script>
 
 <style lang="scss">
 body {

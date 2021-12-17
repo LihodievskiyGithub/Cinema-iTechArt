@@ -4,10 +4,13 @@ const SET_SEARCH = "SET_SEARCH"
 const SET_FILTER = "SET_FILTER"
 const ADD_MOVIE = "ADD_MOVIE"
 const DELETE_MOVIE = "DELETE_MOVIE"
-const UPDATE_MOVIE = "UPDATE_MOVIE";
+const UPDATE_MOVIE = "UPDATE_MOVIE"
+const SEARCH_MOVIES = "SEARCH_MOVIES";
+
 
 
 const state = {
+    moviesHome: [],
     movies: movieList,
     search: '',
     filter: {
@@ -17,6 +20,10 @@ const state = {
 }
 
 const mutations = {
+  [SEARCH_MOVIES](state, movies) {
+    state.moviesHome = movies;
+  },
+
   [SET_SEARCH](state, search) {
     state.search = search;
   },
@@ -44,6 +51,9 @@ const mutations = {
 };
 
 const actions = {
+  updateMovies({ commit }, movies) {
+    commit(SEARCH_MOVIES, movies);
+  },
   search({ commit }, search) {
     commit(SET_SEARCH, search);
   },
@@ -64,34 +74,28 @@ const actions = {
 };
 
 const getters = {
-    getMovies: state => {
-        return state.movies.filter(movie => movie.name.toLowerCase().indexOf(state.search.toLowerCase()) > -1)
-        .sort(compare(state.filter))
-    },
-    getMovieById: state => id => {
-        return state.movies.find(movie => movie.id === id)
-    }
+
 }
 
 // сортирует фильмы и попадает в sort()
-const compare = ({ key, order }) => {
-    return (a, b) => {
+// const compare = ({ key, order }) => {
+//     return (a, b) => {
 
-        let result = 0
+//         let result = 0
 
-        if (a[key] > b[key]) {
-            result = -1
-        }
+//         if (a[key] > b[key]) {
+//             result = -1
+//         }
 
-        if (a[key] < b[key]) {
-            result = 1
-        }
+//         if (a[key] < b[key]) {
+//             result = 1
+//         }
 
-        if (order === 'asc') return result
+//         if (order === 'asc') return result
 
-        return result * -1
-    }
-}
+//         return result * -1
+//     }
+// }
 
 export default {
     state,
