@@ -155,7 +155,7 @@ function getHallsByCinemaId(cinemaId) {
 
 async function getHallBySessionId(sessionId) {
   const session = await SessionModel.findById(sessionId);
-
+  console.log(session);
   return HallModel.aggregate([
     {
       $match: { _id: ObjectId(session.hall) },

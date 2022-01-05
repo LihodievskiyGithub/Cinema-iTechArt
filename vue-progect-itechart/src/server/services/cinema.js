@@ -12,3 +12,4 @@ function getCinemas(cityId) {
 module.exports = {
   getCinemas,
 };
+

@@ -1,7 +1,7 @@
 <template>
   <div id="navbar-wrap" class="card-shadow">
     <div id="navbar">
-      <h2 @click="$router.push('/')">Cinema Ticket Reservation</h2>
+      <h2 @click="$router.push('/')">Cinema City</h2>
       <div>
         <app-select :filters="filters" @filters-change="filtersChange" />
       </div>

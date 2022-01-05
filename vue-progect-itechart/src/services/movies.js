@@ -1,5 +1,5 @@
 // получаем фильмы с backend
-import axios from 'axios'
+import axios from "./ajax";
 const baseUrl = "http://localhost:3000/api";
 
 async function getMovies(params) {

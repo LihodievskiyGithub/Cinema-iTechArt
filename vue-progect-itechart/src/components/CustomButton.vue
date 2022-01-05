@@ -1,11 +1,18 @@
 <template>
   <div class="wrap">
-    <button><span>Buy ticket</span></button>
+    <button><span>{{title}}</span></button>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  props: {
+    title: {
+      type: String,
+      required: true,
+    }
+  }
+};
 </script>
 
 <style lang='scss' scoped>
@@ -33,7 +40,7 @@ button {
     min-width: 1em;
     padding: 1em;
     border-radius: 2em;
-    background-color: $orange;
+    // background-color: $orange;
     border: 1px solid darken($orange, 5%);
     box-shadow: -5px 5px 10px rgba(0,0,0,0.2);
     transition: transform .1s, box-shadow .2s, background-color .2s;
@@ -59,7 +66,7 @@ button {
   &:active {
     span {
       background-color: $orange;
-      transform: scale(0.97);
+      transform: scale(0.99);
       box-shadow: -2px 2px 5px rgb(0, 0, 0);
     }
     &::after {

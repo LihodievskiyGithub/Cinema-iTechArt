@@ -4,7 +4,6 @@ const ObjectId = mongoose.Types.ObjectId;
 const TicketsSchema = new mongoose.Schema({
   userId: {
     type: ObjectId,
-    required: true,
   },
   sessionId: {
     type: ObjectId,
@@ -19,6 +18,11 @@ const TicketsSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+
+  bought: {
+    type: Boolean,
+    default: false,
+  }
 });
 
 // моделируем пользователя из схемы

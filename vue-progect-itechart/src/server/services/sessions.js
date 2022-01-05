@@ -1,8 +1,11 @@
 const MovieSessionsModel = require("../model/sessions");
 const DateModel = require("../model/date");
 const TimeModel = require("../model/time");
+const TicketModel = require("../model/ticket");
+const SeatsModel = require("../model/seats");
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
+
 
 async function addSession(data) {
   const date = await DateModel.findOneAndUpdate(
@@ -21,6 +24,23 @@ async function addSession(data) {
   const session = new MovieSessionsModel({
     ...data, date: date._id, time: time._id
   });
+  const seats = await SeatsModel.find({
+    hall: ObjectId(session.hall),
+  });
+  const prices = {
+    "Movie Seat": 7,
+    "Love Seat": 10,
+    "Sofa Seat": 15,
+  }
+  const tickets = seats.map((seat) => {
+    return {
+      sessionId: session._id,
+      seatId: seat._id,
+      price: prices[seat.type]
+      }
+  })
+    await TicketModel.insertMany(tickets);
+
   return session.save();
 }
 function getSessions(movieId) {

@@ -2,7 +2,12 @@
   <div class="hall">
     <div class="row" v-for="row in hall.rows" :key="row">
       <div class="seat" v-for="seat in row" :key="seat">
-        <component :is="getSeatComponent(seat.type)"></component>
+        <component
+          @click="handleSeatClick(seat)"
+          :is="getSeatComponent(seat.type)"
+          :is-reserved="!!reservedSeats?.[seat._id]"
+          :is-bought="isBought(seat)"
+        ></component>
       </div>
     </div>
   </div>
@@ -21,10 +26,19 @@ const typeOfSeats = {
 };
 
 export default {
+  emits: ["reserveSeat", "unReserveSeat"],
   props: {
     id: {
       type: [Number, String],
       default: null,
+    },
+    reservedSeats: {
+      type: Object,
+      reqiured: true,
+    },
+    tickets: {
+      type: Array,
+      required: true,
     },
   },
   // components: {SofaSeat, LoveSeat, MovieSeat},
@@ -39,6 +53,20 @@ export default {
     getSeatComponent(type) {
       return typeOfSeats[type];
     },
+
+    handleSeatClick(seat) {
+      if (this.reservedSeats[seat._id]) {
+        this.$emit("unReserveSeat", seat);
+      } else {
+        this.$emit("reserveSeat", seat);
+      }
+    },
+
+    isBought(seat) {
+      return this.tickets.some((ticket) =>{
+        return ticket.seatId === seat._id && ticket.bought;
+      })
+    }
   },
   async created() {
     const hall = await hallService.getHallBySessionId(this.id);

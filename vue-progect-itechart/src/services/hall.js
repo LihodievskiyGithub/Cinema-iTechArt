@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "./ajax";
 const baseUrl = "http://localhost:3000/api";
 
 async function addHall(data) {
@@ -12,8 +12,8 @@ async function getHallById(id) {
 }
 
 async function getHallsByCinemaId(cinemaId) {
-    const response = await axios.get(`${baseUrl}/hall/cinema/${cinemaId}`);
-    return response.data;
+  const response = await axios.get(`${baseUrl}/hall/cinema/${cinemaId}`);
+  return response.data;
 }
 
 async function getHallBySessionId(sessionId) {

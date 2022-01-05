@@ -3,6 +3,8 @@ import Home from '../views/Home.vue'
 import Signup from '../components/Signup'
 import Login from "../components/Login";
 import CinemaHall from "../components/CinemaHall.vue";
+import SeatsPrice from "../components/Prices/SeatsPrice.vue";
+import Reservation from "../views/Reservation";
 // import MoviePreview from '../views/MoviePreview.vue'
 
 const routes = [
@@ -32,6 +34,18 @@ const routes = [
     path: "/CinemaHall/:id",
     name: "CinemaHall",
     component: CinemaHall,
+    props: true,
+  },
+  {
+    path: "/SeatsPrice",
+    name: "SeatsPrice",
+    component: SeatsPrice,
+    props: true,
+  },
+  {
+    path: "/Reservation/:id",
+    name: "Reservation",
+    component: Reservation,
     props: true,
   },
 ];

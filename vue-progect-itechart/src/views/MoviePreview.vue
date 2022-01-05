@@ -5,8 +5,43 @@
     <!-- <navbar /> -->
 
     <div id="movie-container" v-if="movie">
-      <div id="movie-poster">
-        <img :src="movie.poster" alt="Movie poster" />
+      <div id="movie-poster" class="movie-poster">
+        <div class="movie-poster__img">
+          <img :src="movie.poster" alt="Movie poster" />
+        </div>
+
+        <div class="movie-poster__container">
+          <button @click="showModal = true" class="movie-poster__button">
+            <img src="../assets/images/edit.svg" />
+          </button>
+          <button @click="deleteMovie" class="movie-poster__button">
+            <img src="../assets/images/delete.svg" />
+          </button>
+
+          <div class="add-block">
+            <button @click="addList = !addList" class="add-block__button">
+              <img src="../assets/images/add.svg" />
+            </button>
+            <ul :class="{ active: addList }" class="add-block__list">
+              <li class="add-block__item">
+                <button
+                  class="add-block__item-button"
+                  @click="showModalSession = true"
+                >
+                  Add Session
+                </button>
+              </li>
+              <li class="add-block__item">
+                <button
+                  class="add-block__item-button"
+                  @click="showHallModal = true"
+                >
+                  Add hall
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
 
       <div id="movie-info">
@@ -35,14 +70,7 @@
             {{ movie.storyline }}
           </h3>
         </div>
-        <div id="options">
-          <button @click="showModal = true" class="edit">Edit</button>
-          <button @click="deleteMovie" class="delete">Delete</button>
-          <button @click="showModalSession = true" class="edit">
-            Add Session
-          </button>
-          <button @click="showHallModal = true" class="edit">Add hall</button>
-        </div>
+        <div id="options"></div>
       </div>
     </div>
 
@@ -140,7 +168,7 @@
           <span></span>
         </button>
       </div>
-      <button-to-hall @click="toHall(session._id)"/>
+      <custom-button title="Buy Ticket" @click="toHall(session._id)" />
     </div>
     <modal v-if="showModalSession" @close="showModalSession = false">
       <template v-slot:header>
@@ -180,7 +208,7 @@
       <template v-slot:footer> </template>
     </modal>
 
-    <hall-modal v-if="showHallModal"  @close="showHallModal=false" />
+    <hall-modal v-if="showHallModal" @close="showHallModal = false" />
   </div>
 </template>
 
@@ -189,8 +217,8 @@
 import ratingMixin from "../mixin/getRatingColor";
 import Modal from "../components/Modal.vue";
 import ButtonBack from "../components/ButtonBack.vue";
-import ButtonToHall from "../components/ButtonToHall.vue";
-import HallModal from "../components/HallModal.vue"
+import CustomButton from "../components/CustomButton.vue";
+import HallModal from "../components/HallModal.vue";
 import moviesService from "../services/movies";
 import movieSessionsService from "../services/sessions";
 import cityService from "../services/city";
@@ -205,7 +233,7 @@ export default {
     // Navbar,
     Modal,
     ButtonBack,
-    ButtonToHall,
+    CustomButton,
     HallModal,
   },
   //пропс из index.js (роутинг)
@@ -222,6 +250,7 @@ export default {
 
   data() {
     return {
+      addList: false,
       showHallModal: false,
       showModal: false,
       showModalSession: false,
@@ -295,7 +324,7 @@ export default {
       try {
         const response = await movieSessionsService.addSession(data);
 
-        this.sessions.push( {...dataFilm, _id: response._id} );
+        this.sessions.push({ ...dataFilm, _id: response._id });
         console.log(data);
       } catch (err) {
         console.log(err);
@@ -335,10 +364,10 @@ export default {
     },
     toHall(sessionId) {
       this.$router.push({
-        name: "CinemaHall",
+        name: "Reservation",
         params: { id: sessionId },
-      })
-    }
+      });
+    },
   },
 
   watch: {
@@ -364,20 +393,130 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.session-item {
+.add-block {
+  position: relative;
+  width: 23px;
+  height: 23px;
+  margin-left: auto;
 
+  &__button {
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    cursor: pointer;
+
+    img {
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+  &__list {
+    position: absolute;
+    top: 27px;
+    right: 0;
+    background: #ffffff;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    overflow: hidden;
+    border-radius: 15px;
+    transition: all 0.4s ease-in-out;
+    z-index: 1;
+
+    &.active {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  &__item {
+    height: 25px;
+    border-bottom: 1px solid #000;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      .add-block__item-button {
+        background: #000;
+        color: #fff;
+      }
+    }
+
+    &-button {
+      height: 100%;
+      width: 100%;
+      padding: 0;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-weight: 500;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+  }
+}
+
+.movie-poster {
+  max-width: 350px;
+
+  &__container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  &__img {
+    width: 100%;
+    margin-bottom: 16px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0px -12px 24px 0px rgba(66, 68, 90, 1);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__button {
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 23px;
+    height: 23px;
+    padding: 0;
+    cursor: pointer;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+}
+
+.session-item {
   margin: 0 20px;
 }
 
 .session-info {
   margin-bottom: 5px;
-border-bottom: red solid 1px;
+  border-bottom: red solid 1px;
 }
 
 .session {
   display: flex;
   justify-content: flex-start;
-  margin: 10px 50px;
+  margin: 35px 70px;
   color: white;
 }
 .project__item-cross {
@@ -394,7 +533,7 @@ border-bottom: red solid 1px;
 .project__item-cross span {
   position: absolute;
   top: -67px;
-  left: 132px;
+  left: 150px;
   width: 100%;
   height: 1px;
   background: rgb(0, 0, 0);
@@ -418,25 +557,18 @@ border-bottom: red solid 1px;
     display: flex;
     justify-content: center;
     flex-grow: 1;
-    margin-top: 90px;
+    margin-top: 100px;
     padding: 0 1rem;
 
     #movie-poster {
-      flex-grow: 1;
-      min-width: 400px;
-
-      img {
-        max-width: 300px;
-        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.473),
-          0 10px 10px rgba(0, 0, 0, 0.473);
-        margin-bottom: 7px;
-        border-radius: 15px;
-      }
+      flex-basis: calc(35% - 10px);
+      padding-right: 25px;
     }
 
     #movie-info {
       display: flex;
-      flex-grow: 2;
+      flex-basis: calc(65% - 10px);
+      padding-left: 10px;
       text-align: left;
       flex-direction: column;
       justify-content: space-between;

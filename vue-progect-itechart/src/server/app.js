@@ -16,6 +16,11 @@ const cinemas = require("./api/cinema");
 const dates = require("./api/date");
 const times = require("./api/time");
 const halls = require("./api/hall");
+const tickets = require("./api/ticket")
+
+//middleware
+
+const auth = require("./middlewares/auth")
 
 
 // ...
@@ -23,6 +28,7 @@ const halls = require("./api/hall");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
+app.use(auth);
 
 app.post("/signup", (req, res) => {
   const newUser = new User({
@@ -101,6 +107,7 @@ app.use("/api/cinema", cinemas);
 app.use("/api/date", dates);
 app.use("/api/time", times);
 app.use("/api/hall", halls);
+app.use("/api/ticket", tickets);
 
 
 
@@ -122,3 +129,5 @@ mongoose
       console.log("Listening on port 3000");
     });
   });
+
+

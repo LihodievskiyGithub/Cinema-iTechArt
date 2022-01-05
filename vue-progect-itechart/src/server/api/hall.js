@@ -21,6 +21,7 @@ router.get("/cinema/:id", function (req, res) {
 });
 
 router.get("/session/:id", function (req, res) {
+  console.log(req.user)
   hallService.getHallBySessionId(req.params.id).then((hall) => {
     res.json(hall);
   });
