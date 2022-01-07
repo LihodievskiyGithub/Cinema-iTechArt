@@ -47,8 +47,8 @@
       <div id="movie-info">
         <div>
           <h1>{{ movie.name }}</h1>
-          <h3>{{ movie.year }}</h3>
-          <h3>{{ movie.genre }}</h3>
+          <h3> <strong>{{ movie.year }}</strong></h3>
+          <h3> <strong>{{ movie.genre }}</strong></h3>
           <h3>
             <span
               id="movie-rating"
@@ -57,16 +57,16 @@
             >
           </h3>
 
-          <h3>Budget: {{ movie.budget }}</h3>
-          <h3>Box office: {{ movie.boxOffice }}</h3>
+          <h3> <strong>Budget:</strong> {{ movie.budget }}</h3>
+          <h3> <strong>Box office:</strong> {{ movie.boxOffice }}</h3>
           <h3>
-            Actors:
+            <strong>Actors: </strong>
             <span v-for="(actor, index) in movie.actors" :key="index">{{
               actor.name
             }}</span>
           </h3>
           <h3>
-            <strong>Storyline: </strong>
+            <strong>Storyline:  </strong>
             {{ movie.storyline }}
           </h3>
         </div>
@@ -579,7 +579,12 @@ export default {
       }
 
       h3 {
-        color: white;
+        color: DarkGray;
+
+        strong {
+          color: white;
+          border-bottom: 1px solid white;
+        }
 
         #movie-rating {
           display: flex;

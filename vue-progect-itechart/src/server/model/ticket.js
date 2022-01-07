@@ -13,7 +13,7 @@ const TicketsSchema = new mongoose.Schema({
     type: ObjectId,
     required: true,
   },
- 
+
   price: {
     type: Number,
     required: true,
@@ -22,7 +22,11 @@ const TicketsSchema = new mongoose.Schema({
   bought: {
     type: Boolean,
     default: false,
-  }
+  },
+  reserved: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // моделируем пользователя из схемы

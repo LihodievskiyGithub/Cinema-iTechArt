@@ -5,13 +5,13 @@
     </template>
     <template v-slot:body>
       <additon-item :cost="cost.cola" v-model="cola">
-        <img src="../assets/images/coca-cola.png" alt="Cola" />
+        <img src="../assets/images/coca-cola.jpg" alt="Cola" />
       </additon-item>
       <additon-item :cost="cost.popcorn" v-model="popcorn">
         <img src="../assets/images/popcorn.png" alt="Popcorn" />
       </additon-item>
       <additon-item :cost="cost.chips" v-model="chips">
-        <img src="../assets/images/lays-potato-chips.png" alt="Chips" />
+        <img src="../assets/images/pringles.png" alt="Chips" />
       </additon-item>
       {{cost.total}}
     </template>

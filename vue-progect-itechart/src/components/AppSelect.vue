@@ -1,36 +1,38 @@
 <template>
-  <form class="dropdown">
-    <select v-model="cinemaModel" class="dropdown-select">
-      <option value="" hidden disabled selected>Cinema</option>
-      <option :value="option._id" v-for="option in cinemas" :key="option">
-        {{ option.name }}
-      </option>
-    </select>
-  </form>
-  <form class="dropdown">
-    <select v-model="cityModel" name="" id="" class="dropdown-select">
-      <option value="" hidden disabled selected>City</option>
-      <option :value="option._id" v-for="option in cities" :key="option">
-        {{ option.cityName }}
-      </option>
-    </select>
-  </form>
-  <form class="dropdown">
-    <select v-model="timeModel" class="dropdown-select">
-      <option value="" hidden disabled selected>Time</option>
-      <option :value="option._id" v-for="option in times" :key="option">
-        {{ option.time }}
-      </option>
-    </select>
-  </form>
-  <form class="dropdown">
-    <select v-model="dateModel" class="dropdown-select">
-      <option value="" hidden disabled selected>Date</option>
-      <option :value="option._id" v-for="option in dates" :key="option">
-        {{ option.month }}
-      </option>
-    </select>
-  </form>
+  <div class="section-select">
+    <form class="dropdown">
+      <select v-model="cinemaModel" class="dropdown-select">
+        <option value="" hidden disabled selected>Cinema</option>
+        <option :value="option._id" v-for="option in cinemas" :key="option">
+          {{ option.name }}
+        </option>
+      </select>
+    </form>
+    <form class="dropdown">
+      <select v-model="cityModel" name="" id="" class="dropdown-select">
+        <option value="" hidden disabled selected>City</option>
+        <option :value="option._id" v-for="option in cities" :key="option">
+          {{ option.cityName }}
+        </option>
+      </select>
+    </form>
+    <form class="dropdown">
+      <select v-model="timeModel" class="dropdown-select">
+        <option value="" hidden disabled selected>Time</option>
+        <option :value="option._id" v-for="option in times" :key="option">
+          {{ option.time }}
+        </option>
+      </select>
+    </form>
+    <form class="dropdown">
+      <select v-model="dateModel" class="dropdown-select">
+        <option value="" hidden disabled selected>Date</option>
+        <option :value="option._id" v-for="option in dates" :key="option">
+          {{ option.month }}
+        </option>
+      </select>
+    </form>
+  </div>
 </template>
 
 <script>
@@ -40,9 +42,7 @@ import timeService from "../services/time";
 import dateService from "../services/date";
 
 export default {
-  emits: [
-    "filtersChange",
-  ],
+  emits: ["filtersChange"],
   props: {
     filters: {
       type: Object,
@@ -69,8 +69,8 @@ export default {
     async fetchCinemas() {
       const params = {};
       if (this.filters.city) {
-          params.cityId = this.filters.city
-        }
+        params.cityId = this.filters.city;
+      }
       try {
         this.cinemas = await cinemaService.getCinemas(params);
       } catch (err) {
@@ -96,45 +96,45 @@ export default {
   computed: {
     cinemaModel: {
       get() {
-        return this.filters.cinema
-      }, 
+        return this.filters.cinema;
+      },
       set(value) {
-        this.$emit("filtersChange", {...this.filters, cinema: value})
-        console.log(value)
+        this.$emit("filtersChange", { ...this.filters, cinema: value });
+        console.log(value);
       },
     },
-       cityModel: {
+    cityModel: {
       get() {
-        return this.filters.city
-      }, 
+        return this.filters.city;
+      },
       set(value) {
-        this.$emit("filtersChange", {...this.filters, city: value})
-        console.log(value)
+        this.$emit("filtersChange", { ...this.filters, city: value });
+        console.log(value);
       },
     },
-       dateModel: {
+    dateModel: {
       get() {
-        return this.filters.date
-      }, 
+        return this.filters.date;
+      },
       set(value) {
-        this.$emit("filtersChange", {...this.filters, date: value})
-        console.log(value)
+        this.$emit("filtersChange", { ...this.filters, date: value });
+        console.log(value);
       },
     },
-       timeModel: {
+    timeModel: {
       get() {
-        return this.filters.time
-      }, 
-      set(value) {
-        this.$emit("filtersChange", {...this.filters, time: value})
-        console.log(value)
+        return this.filters.time;
       },
-    }
+      set(value) {
+        this.$emit("filtersChange", { ...this.filters, time: value });
+        console.log(value);
+      },
+    },
   },
   watch: {
-    "filters.city": function() {
+    "filters.city": function () {
       this.fetchCinemas();
-    }
+    },
   },
   created() {
     this.fetchCinemas();
@@ -145,7 +145,17 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+.section-select {
+  display: flex;
+  flex-grow: 2;
+  justify-content: flex-end;
+
+  @media screen and (max-width: 1067px) {
+    display: none;
+  }
+}
+
 .dropdown {
   margin: 0 7px;
   display: inline-block;

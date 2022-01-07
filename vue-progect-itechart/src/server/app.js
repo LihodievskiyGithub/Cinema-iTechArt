@@ -7,6 +7,10 @@ const app = express();
 const cors = require("cors");
 const User = require("./model/User");
 const jwt = require("jsonwebtoken");
+const sockets = require("./sockets")
+const http = require("http");
+const server = http.createServer(app);
+
 
 // роуты
 const movies = require("./api/movies");
@@ -24,6 +28,8 @@ const auth = require("./middlewares/auth")
 
 
 // ...
+
+sockets.init(server);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -125,7 +131,7 @@ mongoose
   .then(() => {
     console.log("Mongo connection");
     app.use("/api", routes);
-    app.listen(3000, () => {
+    server.listen(3000, () => {
       console.log("Listening on port 3000");
     });
   });

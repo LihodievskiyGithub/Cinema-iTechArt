@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 
 const PurchaseSchema = new mongoose.Schema({
+  userId: {
+    type: ObjectId,
+    required: true,
+  },
   tickets: {
     type: [mongoose.Mixed],
   },

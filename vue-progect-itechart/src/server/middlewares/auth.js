@@ -1,16 +1,13 @@
-const User = require("../model/User");
-const jwt = require("jsonwebtoken");
+const auth = require("../services/auth")
 
-module.exports = function (req, res, next) {
-    let token = req.headers.token; //token
-  jwt.verify(token, "secretkey", (err, decoded) => {
-      if (err) return next();
-
-
-    User.findOne({ _id: decoded.userId }, (err, user) => {
-      if (err)  return next();
-        req.user = user;
-        next();
-    });
-  });
+module.exports = async function (req, res, next) {
+  let token = req.headers.token; //token
+  try {
+    const user = await auth(token);
+    req.user = user;
+    return next();
+  }
+  catch (err) {
+    return next()
+  }
 };

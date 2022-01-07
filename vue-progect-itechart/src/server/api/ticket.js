@@ -13,11 +13,12 @@ router.get("/session/:id", function (req, res) {
 
 router.post("/buy/:sessionId", function (req, res) {
   ticketService
-    .buyTickets(req.body, req.params.sessionId)
+    .buyTickets(req.body, req.params.sessionId, req.user._id)
     .then((session) => {
       res.send(session);
     })
     .catch((err) => {
+      res.status(500).send(err.message);
       console.log(err);
     });
 });
@@ -29,6 +30,7 @@ router.post("/complete_purchase", function (req, res) {
       res.send(session);
     })
     .catch((err) => {
+      res.status(500).send(err.message);
       console.log(err);
     });
 })

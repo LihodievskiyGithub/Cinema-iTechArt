@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import './services/socketIo'
 import { defineRule } from "vee-validate";
 import AllRules from "@vee-validate/rules";
 Object.keys(AllRules).forEach((rule) => {

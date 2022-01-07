@@ -2,20 +2,16 @@
   <div id="navbar-wrap" class="card-shadow">
     <div id="navbar">
       <h2 @click="$router.push('/')">Cinema City</h2>
-      <div>
-        <app-select :filters="filters" @filters-change="filtersChange" />
-      </div>
-      <div v-if="$route.path == '/'">
-        <div class="input">
-          <input
-            @input="handleInput"
-            :value="searchQuery"
-            type="text"
-            id="name"
-            name="name"
-            placeholder="Find movie..."
-          />
-        </div>
+      <app-select :filters="filters" @filters-change="filtersChange" />
+      <div class="input" v-if="$route.path == '/'">
+        <input
+          @input="handleInput"
+          :value="searchQuery"
+          type="text"
+          id="name"
+          name="name"
+          placeholder="Find movie..."
+        />
       </div>
       <button v-if="token" @click="logout">Logout</button>
       <router-link class="link" v-else to="/Signup">SignIn</router-link>
@@ -176,40 +172,99 @@ button {
     background-color: #a34c01;
 
     h2 {
+      font-size: 20px;
       margin: 0 1rem 0 0;
       color: white;
       cursor: pointer;
     }
 
-    & > div {
-      display: flex;
-      flex-grow: 2;
-      justify-content: flex-end;
-    }
-
     * {
       box-sizing: border-box;
     }
+
     .input {
-      width: auto;
-      float: right;
-      margin-right: 30px;
+      margin-left: auto;
+
+      input {
+        width: 100px;
+        height: 30px;
+        padding-left: 15px;
+        margin-right: 30px;
+        border-radius: 42px;
+        border: 2px solid #324b4e;
+        background: #f9f0da;
+        outline: none;
+        position: relative;
+        transition: 0.3s linear;
+      }
+      input:focus {
+        width: 200px;
+        border-color: #dc143c;
+        @media screen and (max-width: 503px) {
+          width: 150px;
+        }
+      }
     }
-    input {
-      width: 100px;
-      height: 30px;
-      padding-left: 15px;
-      border-radius: 42px;
-      border: 2px solid #324b4e;
-      background: #f9f0da;
-      outline: none;
-      position: relative;
-      transition: 0.3s linear;
-    }
-    input:focus {
-      width: 200px;
-      border-color: #dc143c;
-    }
+  }
+}
+
+@media (max-width: 1067px) {
+  #navbar-wrap {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 990px) {
+  #navbar-wrap {
+    position: fixed;
+    width: 100%;
+    height: 100px;
+  }
+
+  h2 {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 770px) {
+  #navbar-wrap {
+    position: fixed;
+    width: 100%;
+    height: 100px;
+  }
+
+  h2 {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 503px) {
+  #navbar-wrap {
+    position: fixed;
+    width: 100%;
+    height: 100px;
+  }
+
+  h2 {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 320px) {
+  #navbar-wrap {
+    position: fixed;
+    width: 100%;
+    height: 100px;
+  }
+
+  h2 {
+    font-size: 10px;
   }
 }
 </style>
