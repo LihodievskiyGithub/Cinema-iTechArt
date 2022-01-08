@@ -10,6 +10,7 @@ const jwt = require("jsonwebtoken");
 const sockets = require("./sockets")
 const http = require("http");
 const server = http.createServer(app);
+require("./services/scheduleTask");
 
 
 // роуты

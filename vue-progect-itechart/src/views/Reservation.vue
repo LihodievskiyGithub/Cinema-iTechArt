@@ -1,4 +1,5 @@
 <template>
+  <span v-if="timerFinishedDate">{{ timer }}</span>
   <div class="container">
     <cinema-hall
       :tickets="tickets"
@@ -6,6 +7,7 @@
       @reserveSeat="handleReserveSeat"
       @unReserveSeat="handleUnReserveSeat"
       @preReserveSeat="handlePreReserveSeat"
+      @unReserveSeatSilent="handleUnReserveSeatSilent"
       class="container-hall"
       :id="id"
     />
@@ -34,6 +36,7 @@ import {
   subscribe,
   unReserveSeat,
 } from "../services/socketIo";
+import moment from "moment";
 
 export default {
   props: {
@@ -58,6 +61,9 @@ export default {
       tickets: [],
       isAdditionalOpen: false,
       additionalStuff: {},
+      currentDate: new Date(),
+      intervalId: null,
+      timerFinishedDate: null,
     };
   },
   computed: {
@@ -71,6 +77,7 @@ export default {
         }, 0)
       );
     },
+
     reservedTickets() {
       // проходимся по обычным билетам и фильтруем зарезервированные
       return this.tickets.reduce((acc, ticket) => {
@@ -84,15 +91,23 @@ export default {
     stuffCost() {
       return calculateStuffSum(this.additionalStuff).total || 0;
     },
+
+    timer() {
+      if(!this.timerFinishedDate) return null
+      const timerFinishedDate = moment(this.timerFinishedDate);
+      const timer = timerFinishedDate.diff(this.currentDate);
+      return moment(timer).format("mm:ss")
+    }
   },
   methods: {
     handleReserveSeat(seat) {
       const ticket = this.getTicketBySeat(seat);
       if (ticket.bought || ticket.reserved) return;
       this.reservedSeats[seat._id] = seat;
-      reserveSeat(ticket._id, this.id);
+      const startDate = new Date();
+      reserveSeat(ticket._id, this.id, startDate);
     },
-    
+
     handleUnReserveSeat(seat) {
       const ticket = this.getTicketBySeat(seat);
       if (ticket.bought || (ticket.reserved && !this.reservedSeats[seat._id]))
@@ -101,10 +116,15 @@ export default {
       unReserveSeat(ticket._id, this.id);
     },
 
+    handleUnReserveSeatSilent(seat, tickets) {
+      delete this.reservedSeats[seat._id];
+      tickets.forEach((ticket) => {
+        this.seatReservationHandler({ticket});
+      })
+    },
+
     handlePreReserveSeat(seat) {
-      const ticket = this.getTicketBySeat(seat);
       this.reservedSeats[seat._id] = seat;
-      reserveSeat(ticket._id, this.id);
     },
 
     getTicketBySeat(seat) {
@@ -151,6 +171,20 @@ export default {
       });
       this.tickets[ticketIndex] = data.ticket;
     },
+
+    timerCreatedHandler({ timer }) {
+      if(this.timerFinishedDate) return
+      this.currentDate = new Date();
+      this.timerFinishedDate = new Date(timer.finishedDate)
+      this.intervalId = setInterval(() => {
+        this.currentDate = new Date();
+      }, 1000)
+    },
+
+    timerDeletedHandler() {
+      this.timerFinishedDate = null;
+      clearInterval(this.intervalId)
+    },
   },
 
   async created() {
@@ -171,6 +205,9 @@ export default {
 
     subscribe("seat-reserved", this.seatReservationHandler.bind(this));
     subscribe("seat-unreserved", this.seatReservationHandler.bind(this));
+    subscribe("timer-created", this.timerCreatedHandler.bind(this));
+    subscribe("timer-deleted", this.timerDeletedHandler.bind(this));
+    subscribe("timer-is-out", this.timerDeletedHandler.bind(this));
   },
 };
 </script>

@@ -1,6 +1,7 @@
 const { Server } = require("socket.io");
 const auth = require("./services/auth");
 const ticketService = require("./services/ticket");
+const _ = require("lodash");
 
 let io;
 function init(server) {
@@ -16,19 +17,31 @@ function init(server) {
 function declareEvents() {
   io.on("connection", (socket) => {
     console.log("Socket connection", socket.handshake.data);
-    socket.emit("hello");
+    socket.join(socket.handshake.data.user._id.toString());
     socket.on("join-session", (data) => {
-      console.log("join-session");
       joinRoomHandler(data, socket);
     });
     socket.on("reserve-seat", async (data) => {
       try {
         const ticket = await ticketService.reserveTicket(
           data.ticketId,
-          socket.handshake.data.user._id
+          socket.handshake.data.user._id,
+          data.startDate,
+          data.sessionId
         );
+
+        const timer = await ticketService.createTimer(
+          socket.handshake.data.user._id,
+          data.startDate,
+          data.sessionId
+        );
+
         io.to(data.sessionId).emit("seat-reserved", {
           ticket,
+        });
+
+        socket.emit("timer-created", {
+          timer,
         });
       } catch (err) {
         console.log(err);
@@ -41,9 +54,17 @@ function declareEvents() {
           data.ticketId,
           socket.handshake.data.user._id
         );
+        const isTimerDeleted = await ticketService.removeTimer(
+          socket.handshake.data.user._id,
+          data.sessionId
+        );
+        console.log(isTimerDeleted);
         io.to(data.sessionId).emit("seat-unreserved", {
           ticket,
         });
+        if (isTimerDeleted) {
+          socket.emit("timer-deleted");
+        }
       } catch (err) {
         console.log(err);
       }
@@ -73,15 +94,37 @@ async function joinRoomHandler(data, client) {
   // сlient - socket в кот лежит инфа о клиенте
   if (data.sessionId) {
     client.join(data.sessionId);
-    }
-    
-    const tickets = await ticketService.getReservedTickets(
-      data.sessionId,
-      client.handshake.data.user._id
-    );
-    client.emit('reserved-tickets-sent', {
-        tickets,
-    })
+  }
+  const tickets = await ticketService.getReservedTickets(
+    data.sessionId,
+    client.handshake.data.user._id
+  );
+  client.emit("reserved-tickets-sent", {
+    tickets,
+  });
+
+  const timer = await ticketService.getTimer(
+    data.sessionId,
+    client.handshake.data.user._id
+  );
+  if (timer) {
+    client.emit("timer-created", {
+      timer,
+    });
+  }
 }
 
-module.exports = { init };
+function sendEventOnFinishedTimer({ userIds, tickets, sessionIds }) {
+  console.log(userIds);
+  _.uniq(userIds).forEach((id) => {
+    io.to(id).emit("timer-is-out");
+  });
+
+  _.uniq(sessionIds).forEach((id) => {
+    io.to(id).emit("seats-unreserved", {
+      tickets,
+    });
+  });
+}
+
+module.exports = { init, sendEventOnFinishedTimer };

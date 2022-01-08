@@ -1,4 +1,5 @@
 import { io } from "socket.io-client";
+import _ from "lodash";
 
 const token = localStorage.getItem("token");
 
@@ -14,6 +15,10 @@ const handlers = {
   "seat-reserved": [],
   "seat-unreserved": [],
   "reserved-tickets-sent": [],
+  "timer-created": [],
+  "timer-deleted": [],
+  "timer-is-out": [],
+  "seats-unreserved": [],
 };
 
 socket.on("connect", () => {
@@ -22,23 +27,31 @@ socket.on("connect", () => {
     console.log("Hello");
   });
 
-  socket.on("seat-reserved", (data) => {
-    handlers["seat-reserved"].forEach((handler) => {
-      handler(data);
+  _.forEach(handlers, (eventHandlers, eventName) => {
+    socket.on(eventName, (data) => {
+      eventHandlers.forEach((handler) => {
+        handler(data);
+      });
     });
   });
 
-  socket.on("seat-unreserved", (data) => {
-    handlers["seat-unreserved"].forEach((handler) => {
-      handler(data);
-    });
-  });
+  // socket.on("seat-reserved", (data) => {
+  //   handlers["seat-reserved"].forEach((handler) => {
+  //     handler(data);
+  //   });
+  // });
 
-  socket.on("reserved-tickets-sent", (data) => {
-    handlers["reserved-tickets-sent"].forEach((handler) => {
-      handler(data);
-    });
-  });
+  // socket.on("seat-unreserved", (data) => {
+  //   handlers["seat-unreserved"].forEach((handler) => {
+  //     handler(data);
+  //   });
+  // });
+
+  // socket.on("reserved-tickets-sent", (data) => {
+  //   handlers["reserved-tickets-sent"].forEach((handler) => {
+  //     handler(data);
+  //   });
+  // });
 });
 
 function joinSession(sessionId) {
@@ -47,10 +60,11 @@ function joinSession(sessionId) {
   });
 }
 
-function reserveSeat(ticketId, sessionId) {
+function reserveSeat(ticketId, sessionId, startDate) {
   socket.emit("reserve-seat", {
     sessionId,
     ticketId,
+    startDate,
   });
 }
 

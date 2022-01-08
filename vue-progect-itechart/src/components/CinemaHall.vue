@@ -44,7 +44,12 @@ const typeOfSeats = {
 };
 
 export default {
-  emits: ["reserveSeat", "unReserveSeat", "preReserveSeat"],
+  emits: [
+    "reserveSeat",
+    "unReserveSeat",
+    "preReserveSeat",
+    "unReserveSeatSilent",
+  ],
   props: {
     id: {
       type: [Number, String],
@@ -65,6 +70,7 @@ export default {
       hall: {
         rows: [],
       },
+      preReservedTickets: [],
     };
   },
   methods: {
@@ -94,7 +100,7 @@ export default {
         );
       });
     },
-    actualizeReservedTickets({ tickets }) {
+    actualizeReservedTickets(tickets) {
       const seats = _.flatten(this.hall.rows); // делает один массив из двухмерного
       tickets.forEach((ticket) => {
         const seat = _.find(seats, { _id: ticket.seatId });
@@ -103,15 +109,31 @@ export default {
         }
       });
     },
+
+    seatsUnreservedHandler({tickets}) {
+      const seats = _.flatten(this.hall.rows); // делает один массив из двухмерного
+      tickets.forEach((ticket) => {
+        const seat = _.find(seats, { _id: ticket.seatId });
+        if (seat) {
+          this.$emit("unReserveSeatSilent", seat, tickets);
+        }
+      });
+    },
+
+    savePrereservedTickets({ tickets }) {
+      this.preReservedTickets = tickets;
+      this.actualizeReservedTickets(tickets);
+    },
   },
+
   async created() {
+    subscribe("reserved-tickets-sent", this.savePrereservedTickets.bind(this));
+    subscribe("seats-unreserved", this.seatsUnreservedHandler.bind(this));
+
+
     const hall = await hallService.getHallBySessionId(this.id);
     this.hall = hall;
-
-    subscribe(
-      "reserved-tickets-sent",
-      this.actualizeReservedTickets.bind(this)
-    );
+    this.actualizeReservedTickets(this.preReservedTickets);
   },
 };
 </script>
