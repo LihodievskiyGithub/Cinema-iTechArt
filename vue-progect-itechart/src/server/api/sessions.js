@@ -9,6 +9,12 @@ router.get("/", function (req, res) {
   });
 });
 
+router.get("/:id", function (req, res) {
+  movieSessionsService.getSessionById(req.params.id).then((sessions) => {
+    res.json(sessions);
+  });
+});
+
 router.post("/add", function (req, res) {
   movieSessionsService
     .addSession(req.body)

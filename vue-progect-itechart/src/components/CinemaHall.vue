@@ -1,16 +1,6 @@
 <template>
-  <div class="hall">
+  <div v-if="hall" class="hall">
     <hall-screen />
-    <div class="row" v-for="row in hall.rows" :key="row">
-      <div class="seat" v-for="seat in row" :key="seat">
-        <component
-          @click="handleSeatClick(seat)"
-          :is="getSeatComponent(seat.type)"
-          :is-reserved="!!reservedSeats?.[seat._id]"
-          :is-bought="isBought(seat) || isReservedByAnotherClient(seat)"
-        ></component>
-      </div>
-    </div>
     <div class="seats-info">
       <div class="seat-info">
         <div class="seat-info__seat">
@@ -25,6 +15,16 @@
         <span>Занято</span>
       </div>
     </div>
+    <div class="row" v-for="row in hall.rows" :key="row">
+      <div class="seat" v-for="seat in row" :key="seat">
+        <component
+          @click="handleSeatClick(seat)"
+          :is="getSeatComponent(seat.type)"
+          :is-reserved="!!reservedSeats?.[seat._id]"
+          :is-bought="isBought(seat) || isReservedByAnotherClient(seat)"
+        ></component>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -33,7 +33,6 @@ import SofaSeat from "./Seats/SofaSeat.vue";
 import LoveSeat from "./Seats/LoveSeat.vue";
 import MovieSeat from "./Seats/MovieSeat.vue";
 import HallScreen from "./HallScreen.vue";
-import hallService from "../services/hall";
 import { subscribe } from "../services/socketIo";
 import _ from "lodash";
 
@@ -63,13 +62,14 @@ export default {
       type: Array,
       required: true,
     },
+    hall: {
+      type: [Object],
+      default: null,
+    },
   },
   components: { MovieSeat, HallScreen },
   data() {
     return {
-      hall: {
-        rows: [],
-      },
       preReservedTickets: [],
     };
   },
@@ -101,7 +101,7 @@ export default {
       });
     },
     actualizeReservedTickets(tickets) {
-      const seats = _.flatten(this.hall.rows); // делает один массив из двухмерного
+      const seats = _.flatten(this.hall?.rows); // делает один массив из двухмерного
       tickets.forEach((ticket) => {
         const seat = _.find(seats, { _id: ticket.seatId });
         if (seat) {
@@ -110,7 +110,7 @@ export default {
       });
     },
 
-    seatsUnreservedHandler({tickets}) {
+    seatsUnreservedHandler({ tickets }) {
       const seats = _.flatten(this.hall.rows); // делает один массив из двухмерного
       tickets.forEach((ticket) => {
         const seat = _.find(seats, { _id: ticket.seatId });
@@ -126,14 +126,15 @@ export default {
     },
   },
 
+  watch: {
+    hall() {
+      this.actualizeReservedTickets(this.preReservedTickets);
+    },
+  },
+
   async created() {
     subscribe("reserved-tickets-sent", this.savePrereservedTickets.bind(this));
     subscribe("seats-unreserved", this.seatsUnreservedHandler.bind(this));
-
-
-    const hall = await hallService.getHallBySessionId(this.id);
-    this.hall = hall;
-    this.actualizeReservedTickets(this.preReservedTickets);
   },
 };
 </script>
@@ -161,6 +162,7 @@ export default {
   flex-direction: column;
   gap: 10px;
   width: 100%;
+  margin: -10px 0px 30px 113px;
 }
 
 .seat-info {

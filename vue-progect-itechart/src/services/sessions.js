@@ -8,6 +8,12 @@ async function getSessions(movieId) {
   });
   return response.data;
 }
+
+async function getSessionById(sessionId) {
+  const response = await axios.get(`${baseUrl}/sessions/${sessionId}`)
+  return response.data;
+}
+
 async function addSession(data) {
   const response = await axios.post(`${baseUrl}/sessions/add`, data);
   return response.data;
@@ -25,4 +31,5 @@ export default {
   addSession,
   getSessions,
   deleteSession,
+  getSessionById,
 };

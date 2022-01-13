@@ -276,11 +276,13 @@ export default {
       this.movie = _cloneDeep(this.copyMovie);
       this.showModal = false;
     },
+    
     deleteMovie() {
       // this.$store.dispatch('deleteMovie', parseInt(this.id))
       moviesService.deleteMovie(this.id);
       this.$router.push("/");
     },
+
     async fetchMovie() {
       try {
         this.movie = await moviesService.getMovieById(this.id);

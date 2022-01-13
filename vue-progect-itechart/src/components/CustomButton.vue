@@ -79,7 +79,7 @@ body {
   background-color: $orange;
 }
 .wrap {
-  width: 100%;
+  width: fit-content;
   text-align: center;
   margin-bottom: 3px;
   

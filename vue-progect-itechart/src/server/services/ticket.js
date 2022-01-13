@@ -77,9 +77,15 @@ async function buyTickets(payload, sessionId, userId) {
     })
     .filter((item) => item.quantity);
 
+  const seatPrices = {
+    7: "price_1KAZ25FFaBfUXLbxKO4B2nVE",
+    10: "price_1KAZ25FFaBfUXLbxKO4B2nVE",
+    15: "price_1KAZ25FFaBfUXLbxKO4B2nVE",
+  };
+    
   const lineItems = tickets.map((ticket) => {
     return {
-      price: "price_1KAZ25FFaBfUXLbxKO4B2nVE",
+      price: seatPrices[ticket.price],
       quantity: 1,
     };
   });

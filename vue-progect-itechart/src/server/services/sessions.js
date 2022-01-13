@@ -97,6 +97,11 @@ function getSessions(movieId) {
   ]);
 }
 
+
+function getSessionById(sessionId) {
+  return MovieSessionsModel.findById(sessionId);
+}
+
 function deleteSession(sessionId) {
   return MovieSessionsModel.findByIdAndDelete(sessionId);
 }
@@ -105,4 +110,5 @@ module.exports = {
   addSession,
   getSessions,
   deleteSession,
+  getSessionById,
 };

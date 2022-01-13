@@ -7,7 +7,7 @@ let io;
 function init(server) {
   io = new Server(server, {
     cors: {
-      origin: ["http://localhost:8080"],
+      origin: ["http://localhost:8080", "*", "http://127.0.0.1:5500"],
     },
   });
   io.use(authorize);

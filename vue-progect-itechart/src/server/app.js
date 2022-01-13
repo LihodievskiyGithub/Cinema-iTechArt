@@ -11,6 +11,7 @@ const sockets = require("./sockets")
 const http = require("http");
 const server = http.createServer(app);
 require("./services/scheduleTask");
+const path = require("path");
 
 
 // роуты
@@ -106,6 +107,12 @@ app.get('/user', (req, res) => {
 
   })
 })
+
+
+
+app.get("/", function (req, res) {
+ res.sendFile(path.join(__dirname, "..", "..", "dist", "index.html"));
+});
 
 app.use("/api/sessions", sessions);
 app.use("/api/movies", movies);

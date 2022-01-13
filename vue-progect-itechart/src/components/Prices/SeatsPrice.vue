@@ -2,22 +2,22 @@
   <div class="container">
     <div class="container-text">
       <span class="header-text">
-        <h4 class="text">Типы мест</h4>
+        <h4 class="text">Type of seats</h4>
       </span>
-      <div class="cinema-name">Silver Screen cinemas в ТРЦ "ArenaCity"</div>
+      <div class="cinema-name">Cinema City</div>
 
       <div class="item-1">
         <movie-seat />
         <div>
           <div class="seats-name">
-            <span class="name">Кинокресло</span>
+            <span class="name">Movie seat</span>
           </div>
           <div class="seats-price">
-            <span class="price">13,00 BYN</span>
+            <span class="price">7 $</span>
           </div>
           <div class="seats-description">
             <span class="description"
-              >Одноместное комфортное широкое кресло с подстаканником.</span
+              >Single comfortable wide armchair with cup holder.</span
             >
           </div>
         </div>
@@ -31,15 +31,14 @@
             <span class="name">Love Seat</span>
           </div>
           <div class="seats-price">
-            <span class="price">26,00 BYN</span>
+            <span class="price">10 $</span>
           </div>
           <div class="seats-description">
             <span class="description"
-              >Места для двоих повышенного комфорта. Сидения соединены таким
-              образом, чтобы настроить зрителя на приятный просмотр. Уютные и
-              невероятно мягкие и удобные диванчики идеально подойдут для
-              свиданий, а также семейных и дружеских просмотров. Цена указана за
-              двойное место.</span
+              >Comfortable armchair for one person with adjustable backrest and
+              footrest height. Each chair has its own table. Thanks to the
+              innovative mechanism, you can watch a movie almost horizontally
+              while still sitting in your seat in the cinema hall.</span
             >
           </div>
         </div>
@@ -53,13 +52,12 @@
             <span class="name">Premiere Sofa</span>
           </div>
           <div class="seats-price">
-            <span class="price">35,00 BYN</span>
+            <span class="price">15 $</span>
           </div>
           <div class="seats-description">
-            <span class="description"
-              >Двухместные мягкие диванчики с подголовниками. Комфорт этого
-              кресла моментально позволит вам расслабиться и почувствовать себя
-              как дома. Цена указана за двойное место.</span
+            <span class="description">
+              Double soft sofas with headrests. The comfort of this armchairs
+              will instantly allow you to relax and feel like at home.</span
             >
           </div>
         </div>
@@ -87,6 +85,10 @@ export default {
   color: rgba(255, 255, 255, 0.8);
 }
 
+.container-text {
+  margin: 0px 50px 0px 0px;
+}
+
 .cinema-name {
   line-height: 50px;
   opacity: 0.5;
@@ -110,7 +112,7 @@ export default {
   /* display: flex; */
   padding: 15px 0px;
   border-top: 1px solid rgba(255, 255, 255, 0.15);
-  
+
   svg {
     width: 60px;
   }
