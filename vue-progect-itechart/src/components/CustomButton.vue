@@ -82,6 +82,7 @@ body {
   width: fit-content;
   text-align: center;
   margin-bottom: 3px;
+  margin-left: 35px;
   
   button {
     margin: 1em;

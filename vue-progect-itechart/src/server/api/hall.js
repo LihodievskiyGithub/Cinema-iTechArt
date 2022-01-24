@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const hallService = require("../services/hall");
+const adminGuard = require("../middlewares/adminGuard");
 
-router.post("/add", function (req, res) {
+router.post("/add", adminGuard, function (req, res) {
   hallService.createHall(req.body).then(() => {
     res.json();
   });

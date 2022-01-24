@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 // const MoviesModel = require("../model/movies");
 const moviesServices = require("../services/movies");
+const adminGuard = require("../middlewares/adminGuard");
 
 
 
@@ -27,7 +28,7 @@ router.get("/", function (req, res) {
     });
 });
 
-router.post("/add", function (req, res) {
+router.post("/add", adminGuard, function (req, res) {
   moviesServices.addMovie(req.body)
     .then((result) => {
       res.json(result);
@@ -37,7 +38,7 @@ router.post("/add", function (req, res) {
     });
 })
 
-router.delete("/delete/:id", function (req, res) {
+router.delete("/delete/:id", adminGuard,  function (req, res) {
   const id = req.params.id;
   moviesServices.deleteMovie(id)
     .then((result) => {
@@ -48,7 +49,7 @@ router.delete("/delete/:id", function (req, res) {
     })
 })
 
-router.put("/update/:id", function (req, res) {
+router.put("/update/:id", adminGuard, function (req, res) {
   const id = req.params.id;
   moviesServices
     .updateMovie(id, req.body)

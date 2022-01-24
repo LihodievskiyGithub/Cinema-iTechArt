@@ -101,6 +101,7 @@ app.get('/user', (req, res) => {
         user: {
           email: user.email,
           username: user.username,
+          isAdmin: user.isAdmin,
         },
       });
     })

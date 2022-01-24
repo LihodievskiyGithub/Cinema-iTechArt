@@ -37,6 +37,10 @@ button {
     border: 1px solid darken($orange, 5%);
     box-shadow: -5px 5px 10px rgba(0,0,0,0.2);
     transition: transform .1s, box-shadow .2s, background-color .2s;
+
+    @media screen and (max-width: 880px) {
+      padding: 0.7em;
+    }
   }
   &::after {
     content: '';

@@ -1,24 +1,25 @@
 <template>
   <router-view />
+  <notifications />
 </template>
 
 <script>
-import {mapActions } from 'vuex'
+import { mapActions } from "vuex";
 
 export default {
   methods: {
-    ...mapActions('user', ['setToken'])
+    ...mapActions("user", ["setToken"]),
   },
   created() {
     // достаем токен из хранилища и передаем в vuex
-   const token = localStorage.getItem('token')
-   this.setToken(token)
-  }
-}
+    const token = localStorage.getItem("token");
+    this.setToken(token);
+  },
+};
 </script>
 
 <style lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap");
 
 body {
   background-color: #222b31;
@@ -37,8 +38,12 @@ body {
 }
 
 * {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
+
+.vue-notification-group {
+  margin-top: 70px
+} 
 // .card-shadow {
 //   -webkit-box-shadow: 0px 5px 5px 0px rgba(8, 8, 8, 0.5);
 //   -moz-box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.5);

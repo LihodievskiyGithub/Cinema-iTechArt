@@ -1,8 +1,8 @@
 <template>
-<div v-if="token">
-  <h5>{{ username }}</h5>
-  <h5>{{ email }}</h5>
-</div>
+  <div v-if="token">
+    <h5>{{ username }}</h5>
+    <h5>{{ email }}</h5>
+  </div>
   <div id="filters">
     <h3>Filters</h3>
     <div class="icons-0">
@@ -15,30 +15,29 @@
         {{ filter.name }}
         <!-- <v-icon :name="filter.icon" /> -->
         <!-- <span class="icons"> -->
-          <i :class="filter.icon"></i>
+        <i :class="filter.icon"></i>
         <!-- </span> -->
-        
       </p>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-import { mapGetters } from 'vuex'
+import axios from "axios";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
-   emits: ['sortChanged'],
-    props: {
-    sort:{
+  emits: ["sortChanged"],
+  props: {
+    sort: {
       type: Object,
       required: true,
-    }
+    },
   },
   data() {
     return {
-      username: '',
-      email: '',
+      username: "",
+      email: "",
       filters: [
         {
           name: "Rating highest",
@@ -50,7 +49,7 @@ export default {
           name: "Rating lowest",
           key: "rating",
           order: "asc",
-          icon:"fas fa-thumbs-down"
+          icon: "fas fa-thumbs-down",
         },
         // {
         //   name: "Year oldest",
@@ -68,33 +67,41 @@ export default {
     };
   },
   // выводим имя и email на фронт
-  mounted() {
-    axios.get('http://localhost:3000/user', { headers: { token: localStorage.getItem('token')}})
-      .then(res => {
-        this.username = res.data.user.username;
-        this.email = res.data.user.email;
-      })
-  },
   methods: {
+    ...mapActions("user", ["setUser"]),
+
     // обращаемся к каждому элементу массива из action
     applyFilter(filter) {
-      this.$emit('sortChanged', filter)
+      this.$emit("sortChanged", filter);
     },
   },
+
+  mounted() {
+    axios
+      .get("http://localhost:3000/user", {
+        headers: { token: localStorage.getItem("token") },
+      })
+      .then((res) => {
+        this.setUser(res.data.user);
+        this.username = res.data.user.username;
+        this.email = res.data.user.email;
+      });
+  },
+
   computed: {
     // лежит токен из вьюкса
-    ...mapGetters('user', ['token'])
+    ...mapGetters("user", ["token"]),
   },
-   watch: {
+  watch: {
     token() {
-     console.log(this.token);
+      console.log(this.token);
     },
   },
 };
 </script>
 
 <style lang='scss' scoped>
-h5{
+h5 {
   color: white;
 }
 #filters {
@@ -115,7 +122,7 @@ i {
 
 .active:hover i {
   opacity: 0;
-   transition: all 0.6s ease-in-out;
+  transition: all 0.6s ease-in-out;
 }
 
 // .active:hover {

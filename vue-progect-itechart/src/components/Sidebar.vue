@@ -1,7 +1,7 @@
 <template>
   <div id="sidebar">
     <filters  :sort="sort"  @sort-changed="sortChanged"/>
-    <button @click="showModal = true">Add movie</button>
+    <button v-if="isAdmin" @click="showModal = true">Add movie</button>
 
     <modal v-if="showModal" @close="showModal = !showModal">
       <template v-slot:header>
@@ -87,6 +87,7 @@
 import Filters from "./Filters.vue";
 import Modal from "./Modal.vue";
 import moviesService from "../services/movies";
+import { mapGetters } from "vuex";
 
 export default {
   emits: ['sortChanged'],
@@ -112,6 +113,12 @@ export default {
       },
     };
   },
+
+    components: {
+    Filters,
+    Modal,
+  },
+
   methods: {
     addActor() {
       this.form.actors.push({ name: "" });
@@ -133,9 +140,9 @@ export default {
       this.$emit('sortChanged', sort)
     }
   },
-  components: {
-    Filters,
-    Modal,
+
+   computed: {
+    ...mapGetters("user", ["isAdmin"])
   },
 };
 </script>

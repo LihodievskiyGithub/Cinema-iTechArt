@@ -17,7 +17,7 @@
           <button @click="deleteMovie" class="movie-poster__button">
             <img src="../assets/images/delete.svg" />
           </button>
-
+          <!-- <add-button-custom /> -->
           <div class="add-block">
             <button @click="addList = !addList" class="add-block__button">
               <img src="../assets/images/add.svg" />
@@ -47,8 +47,12 @@
       <div id="movie-info">
         <div>
           <h1>{{ movie.name }}</h1>
-          <h3> <strong>{{ movie.year }}</strong></h3>
-          <h3> <strong>{{ movie.genre }}</strong></h3>
+          <h3>
+            <strong>{{ movie.year }}</strong>
+          </h3>
+          <h3>
+            <strong>{{ movie.genre }}</strong>
+          </h3>
           <h3>
             <span
               id="movie-rating"
@@ -57,8 +61,8 @@
             >
           </h3>
 
-          <h3> <strong>Budget:</strong> {{ movie.budget }}</h3>
-          <h3> <strong>Box office:</strong> {{ movie.boxOffice }}</h3>
+          <h3><strong>Budget:</strong> {{ movie.budget }}</h3>
+          <h3><strong>Box office:</strong> {{ movie.boxOffice }}</h3>
           <h3>
             <strong>Actors: </strong>
             <span v-for="(actor, index) in movie.actors" :key="index">{{
@@ -66,7 +70,7 @@
             }}</span>
           </h3>
           <h3>
-            <strong>Storyline:  </strong>
+            <strong>Storyline: </strong>
             {{ movie.storyline }}
           </h3>
         </div>
@@ -218,14 +222,16 @@ import ratingMixin from "../mixin/getRatingColor";
 import Modal from "../components/Modal.vue";
 import ButtonBack from "../components/ButtonBack.vue";
 import CustomButton from "../components/CustomButton.vue";
+// import AddButtonCustom from "../components/AddHallAndSessionButton.vue";
 import HallModal from "../components/HallModal.vue";
 import moviesService from "../services/movies";
 import movieSessionsService from "../services/sessions";
 import cityService from "../services/city";
 import cinemaService from "../services/cinema";
 import hallsService from "../services/hall";
-
+import notifications from "../services/notifications";
 import _cloneDeep from "lodash/cloneDeep";
+import { mapGetters } from "vuex";
 
 export default {
   mixins: [ratingMixin],
@@ -235,6 +241,7 @@ export default {
     ButtonBack,
     CustomButton,
     HallModal,
+    // AddButtonCustom,
   },
   //пропс из index.js (роутинг)
   props: {
@@ -276,11 +283,20 @@ export default {
       this.movie = _cloneDeep(this.copyMovie);
       this.showModal = false;
     },
-    
-    deleteMovie() {
+
+    async deleteMovie() {
       // this.$store.dispatch('deleteMovie', parseInt(this.id))
-      moviesService.deleteMovie(this.id);
-      this.$router.push("/");
+      try {
+        await moviesService.deleteMovie(this.id);
+        await this.$router.push("/");
+        notifications("Movie deleted", {
+          type: "success",
+        });
+      } catch (err) {
+        notifications(err, {
+          type: "warn",
+        });
+      }
     },
 
     async fetchMovie() {
@@ -380,6 +396,10 @@ export default {
       }
       this.fetchHalls(val._id);
     },
+  },
+
+  computed: {
+    ...mapGetters("user", ["isAdmin"])
   },
 
   created() {
@@ -520,6 +540,10 @@ export default {
   justify-content: flex-start;
   margin: 35px 70px;
   color: white;
+
+  @media screen and (max-width: 783px) {
+    flex-wrap: wrap;
+  }
 }
 .project__item-cross {
   position: relative;
@@ -534,8 +558,8 @@ export default {
 
 .project__item-cross span {
   position: absolute;
-  top: -67px;
-  left: 150px;
+  top: -70px;
+  left: 162px;
   width: 100%;
   height: 1px;
   background: rgb(0, 0, 0);
@@ -562,9 +586,18 @@ export default {
     margin-top: 100px;
     padding: 0 1rem;
 
+    @media screen and (max-width: 880px) {
+      flex-direction: column;
+      align-items: center;
+    }
+
     #movie-poster {
       flex-basis: calc(35% - 10px);
       padding-right: 25px;
+
+      @media screen and (max-width: 880px) {
+        padding-right: 0;
+      }
     }
 
     #movie-info {
@@ -578,6 +611,12 @@ export default {
       h1 {
         color: white;
         margin-bottom: 2rem;
+        font-size: 32px;
+
+        @media screen and (max-width: 880px) {
+          text-align: center;
+          font-size: 27px;
+        }
       }
 
       h3 {

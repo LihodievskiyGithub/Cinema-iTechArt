@@ -50,8 +50,9 @@ export default {
       // очищаем токен из vuex
       localStorage.removeItem("token");
       this.setToken(null);
+      this.setUser(null);
     },
-    ...mapActions("user", ["setToken"]),
+    ...mapActions("user", ["setToken", "setUser"]),
 
     filtersChange(value) {
       this.$emit("filtersChange", value);

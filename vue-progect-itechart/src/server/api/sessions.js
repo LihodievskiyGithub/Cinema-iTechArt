@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const movieSessionsService = require("../services/sessions");
+const adminGuard = require("../middlewares/adminGuard")
 
 
 router.get("/", function (req, res) {
@@ -15,7 +16,7 @@ router.get("/:id", function (req, res) {
   });
 });
 
-router.post("/add", function (req, res) {
+router.post("/add", adminGuard, function (req, res) {
   movieSessionsService
     .addSession(req.body)
     .then((result) => {
@@ -26,7 +27,7 @@ router.post("/add", function (req, res) {
     });
 });
 
-router.delete("/delete/:id", function (req, res) {
+router.delete("/delete/:id", adminGuard, function (req, res) {
   const id = req.params.id;
   movieSessionsService
     .deleteSession(id)
